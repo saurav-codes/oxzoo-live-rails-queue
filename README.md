@@ -1,6 +1,10 @@
 # rails-queue (s1)
 
-> **Role in the zoo:** project `rails-queue` of [oxzoo-live](https://github.com/saurav-codes/oxzoo-live-control/blob/main/zoo/README.md#projects), deployed with ox on server s1 at https://rails-queue.s1.zoo.sorv.dev. The contract it follows is [DESIGN.md](https://github.com/saurav-codes/oxzoo-live-control/blob/main/zoo/DESIGN.md).
+Deployed with [ox](https://deploywithox.com): deploy a repo to your own server with one command, no Docker. [Docs](https://deploywithox.com/docs) · [Guide for this stack](https://deploywithox.com/docs/guides/rails)
+
+**Live demo:** https://rails-queue.s1.zoo.sorv.dev
+
+> **Role in the zoo:** project `rails-queue` of [oxzoo-live](https://github.com/saurav-codes/oxzoo-live-control/blob/main/zoo/README.md#projects), deployed with [ox](https://deploywithox.com) on server s1 at https://rails-queue.s1.zoo.sorv.dev. The contract it follows is [DESIGN.md](https://github.com/saurav-codes/oxzoo-live-control/blob/main/zoo/DESIGN.md).
 
 Rails 8.1 on Puma with Postgres and a Solid Queue worker. It is the queue
 member of the shop-order and ping-pong chains in the zoo (DESIGN.md, P4).
