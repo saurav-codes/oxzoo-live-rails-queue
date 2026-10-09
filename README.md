@@ -30,8 +30,8 @@ member of the shop-order and ping-pong chains in the zoo (DESIGN.md, P4).
 Rails detection, `[workers]`, `build.migrate` (`db:prepare`), shared Postgres
 service, `.ruby-version` tool pinning, generated `DATABASE_URL`.
 
-`ox.toml` declares only the worker and Postgres. It keeps an empty `[app]` table
-because without it ox drops the detected app (see findings).
+`ox.toml` declares only the worker and Postgres; the puma start and `/up` health
+are detected without an `[app]` table (finding 1, fixed in ox d89326bc).
 
 ## Variables
 
@@ -85,8 +85,8 @@ ox check . (manifest: ox.toml)
   services.postgres          postgres 18 (shared)                                 default
 
   Provided by ox: PORT, HOST, OX_ENV, OX_PROJECT, OX_RELEASE, OX_DATA_DIR, PUBLIC_URL, PUBLIC_HOST, DATABASE_URL
-  Set on the dashboard before the first deploy: SECRET_KEY_BASE, WEBHOOK_SECRET, LARAVEL_URL, ZOO_PANEL_ORIGIN
-  hint: Solid Queue runs jobs only in a worker: add [workers] jobs = "RAILS_ENV=production bin/jobs"
+  Set on the dashboard before the first deploy: SECRET_KEY_BASE (Rails or Phoenix key base: 128 hex characters, Generate makes it), WEBHOOK_SECRET, LARAVEL_URL, ZOO_PANEL_ORIGIN
+  hint: ox.toml has no [app], so the web app detected from config/puma.rb runs next to the workers; if this project serves no web page, set [app] enabled = false
 
 Ready to deploy.
 ```
@@ -97,5 +97,7 @@ Ready to deploy.
    health, no PUBLIC_URL, yet ox check still says "Ready to deploy". Repro:
    this folder with `ox.toml` reduced to `[workers] jobs = "RAILS_ENV=production bin/jobs"`
    and `[services] postgres = {}`, then `ox check .`. Expected: detected app kept.
+   Fixed in ox d89326bc; this repo's `ox.toml` now has no `[app]`.
 2. The Solid Queue hint above still prints although `[workers] jobs` already
    runs `bin/jobs`. Expected: no hint when a worker runs `bin/jobs`.
+   Fixed in ox 92612c79.

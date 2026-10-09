@@ -1,7 +1,3 @@
-# An empty [app] keeps the detected puma start and /up health: without the
-# table ox plans no web process (finding in README).
-[app]
-
 # Detection only hints Solid Queue, so the worker is declared here. With an
 # ox.toml, [services] is exactly what it lists: one postgres holds the app
 # and the queue tables.
