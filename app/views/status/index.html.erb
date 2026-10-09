@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>rails-queue</title>
+  <style>
+    body { font: 15px/1.5 system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; color: #1d1d1f; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 1.5rem; }
+    th, td { text-align: left; padding: .3rem .6rem; border-bottom: 1px solid #ddd; font-size: 14px; }
+    code { font-size: 13px; }
+    .muted { color: #666; }
+  </style>
+</head>
+<body>
+  <h1>rails-queue</h1>
+  <p class="muted"><%= @identity[:stack] %> on <%= @identity[:server] %>, release <code><%= @identity[:release] %></code>, <%= @identity[:env] %>, up <%= @identity[:uptime_s] %> s</p>
+
+  <h2>Solid Queue</h2>
+  <table>
+    <tr><th>Ready</th><th>Scheduled</th><th>Running</th><th>Failed</th></tr>
+    <tr><td><%= @queue[:ready] %></td><td><%= @queue[:scheduled] %></td><td><%= @queue[:running] %></td><td><%= @queue[:failed] %></td></tr>
+  </table>
+  <table>
+    <tr><th>Process</th><th>PID</th><th>Last heartbeat</th></tr>
+    <% @queue[:processes].each do |p| %>
+      <tr><td><%= p[:kind] %></td><td><%= p[:pid] %></td><td><%= p[:last_heartbeat_at] %></td></tr>
+    <% end %>
+    <% if @queue[:processes].empty? %>
+      <tr><td colspan="3" class="muted">No live Solid Queue process: bin/jobs is not running.</td></tr>
+    <% end %>
+  </table>
+
+  <h2>Recent hops</h2>
+  <table>
+    <tr><th>At</th><th>Trace</th><th>Step</th><th>Detail</th></tr>
+    <% @hops.each do |hop| %>
+      <tr><td><%= hop.created_at.utc.strftime("%H:%M:%S") %></td><td><code><%= hop.trace %></code></td><td><%= hop.step %></td><td><%= hop.detail %></td></tr>
+    <% end %>
+    <% if @hops.empty? %>
+      <tr><td colspan="4" class="muted">No webhooks yet.</td></tr>
+    <% end %>
+  </table>
+
+  <p class="muted">JSON: <a href="/api/queue">/api/queue</a>, <a href="/api/hops">/api/hops</a>, <a href="/_zoo/health">/_zoo/health</a>, <a href="/_zoo/probe">/_zoo/probe</a></p>
+</body>
+</html>
